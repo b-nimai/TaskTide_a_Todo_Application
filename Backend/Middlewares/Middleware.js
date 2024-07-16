@@ -7,14 +7,14 @@ async function userMiddleware(req, res, next){
     const token = req.headers['authorization'];
     const words = token.split(" ");
     const jwtToken = words[1];
-    let decodedValue = null;
     let verified = true;
     try {
-        decodedValue = jwt.verify(jwtToken, process.env.JWT_SECRET);
+        const decodedValue = jwt.verify(jwtToken, process.env.JWT_SECRET);
+        req.userId = decodedValue.email;
     } catch (error) {
         verified = false;
     }
-    
+
     if(!verified){
         return res.status(411).json({
             message:'You are not allowed to do this task'

@@ -12,6 +12,10 @@ const userSchema = new mongoose.Schema({
 })
 
 const toDoSchema = new mongoose.Schema({
+    identity:{
+        type: String,
+        required: true
+    },
     title:{
         type: String,
         required: true

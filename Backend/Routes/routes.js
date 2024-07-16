@@ -20,6 +20,7 @@ function inputCheck(obj){
     return true;
 }
 
+// Signup route handler
 router.post("/signup", async (req, res)=>{
     
     if(inputCheck(req.body)){
@@ -46,6 +47,7 @@ router.post("/signup", async (req, res)=>{
     }
 })
 
+// Login route handler
 router.post("/login", async (req, res)=>{
     const { email, password } = req.body;
     if(!emailSchema.safeParse(email).success || !passwordSchema.safeParse(password).success){
@@ -59,7 +61,6 @@ router.post("/login", async (req, res)=>{
             message: "Invalid email, try again"
         })
     }
-    console.log("User : ", + user)
     const passwordMatched = await bcrypt.compare(password, user.password)
     if(!passwordMatched){
         return res.status(411).json({
@@ -78,6 +79,8 @@ router.post("/login", async (req, res)=>{
         token
     })
 })
+
+// Crete todo route handler
 const check = zod.string().min(1);
 router.post("/create", userMiddleware, async (req, res)=>{
     const {title, description} = req.body;
@@ -86,12 +89,50 @@ router.post("/create", userMiddleware, async (req, res)=>{
             message: 'Invalid input, try again.'
         })
     }
+    const identity = req.userId;
+
     const todo = await ToDo.create({
+        identity,
         title,
         description
     })
     return res.json({
         message: 'To-Do created Successfully'
+    })
+})
+
+// Find all the todos route handler
+router.get("/todos", userMiddleware, async (req, res)=>{
+    const identity = req.userId;
+    try {
+        const todos = await ToDo.find({identity: identity})
+        if(!todos){
+            return res.status(511).json({
+                message: "To-Do list is empty."
+            })
+        }
+        return res.status(201).json({
+            todos
+        })
+    } catch (error) {
+        return res.status(510).json({
+            error: error.message
+        })
+    }
+})
+
+// Delete todo route handler
+router.delete("/delete", userMiddleware, async (req, res)=>{
+    const {id} = req.body;
+    try {
+        await ToDo.findOneAndDelete({_id: id});
+    } catch (error) {
+        return res.status(511).json({
+            message: error.message
+        })
+    }
+    return res.status(210).json({
+        message : "To-Do deleted successfully."
     })
 })
 
