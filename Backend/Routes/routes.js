@@ -1,8 +1,11 @@
 const { Router } = require('express')
 const zod = require('zod');
 const { User, ToDo } = require('../DB/database');
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
+const { userMiddleware } = require('../Middlewares/Middleware');
 const router = Router()
+const jwt = require('jsonwebtoken')
+
 
 const nameSchema = zod.string().min(1);
 const emailSchema = zod.string().email();
@@ -20,6 +23,11 @@ function inputCheck(obj){
 router.post("/signup", async (req, res)=>{
     
     if(inputCheck(req.body)){
+        if(!inputCheck(req.body)){
+            return res.status(411).json({
+                message:'Invalid inputs, try again.'
+            })
+        }
         const {name, email, password} = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
         await User.create({
@@ -45,12 +53,13 @@ router.post("/login", async (req, res)=>{
             message: 'Invalid email or password, try again'
         })
     }
-    const user = User.findOne({email : email});
+    const user = await User.findOne({email : email});
     if(!user){
         return res.status(411).json({
             message: "Invalid email, try again"
         })
     }
+    console.log("User : ", + user)
     const passwordMatched = await bcrypt.compare(password, user.password)
     if(!passwordMatched){
         return res.status(411).json({
@@ -70,7 +79,7 @@ router.post("/login", async (req, res)=>{
     })
 })
 const check = zod.string().min(1);
-router.post("/create", async (req, res)=>{
+router.post("/create", userMiddleware, async (req, res)=>{
     const {title, description} = req.body;
     if(!check.safeParse(title).success || !check.safeParse(description).success){
         return res.status(411).json({
