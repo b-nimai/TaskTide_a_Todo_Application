@@ -6,9 +6,18 @@ mongoose.connect(DB_URL);
 console.log("Database connection successfull.")
 
 const userSchema = new mongoose.Schema({
-    name: String,
-    email : String,
-    password : String
+    name: {
+        type: String,
+        required: true
+    },
+    email : {
+        type: String,
+        required: true
+    },
+    password : {
+        type: String,
+        required: true
+    }
 })
 
 const toDoSchema = new mongoose.Schema({
@@ -21,8 +30,13 @@ const toDoSchema = new mongoose.Schema({
         required: true
     },
     description:{
-        type: String
+        type: String,
+        required: true
     },
+    complete:{
+        type: Boolean,
+        default: false
+    }
 })
 
 const User = mongoose.model('User', userSchema);

@@ -11,6 +11,7 @@ async function userMiddleware(req, res, next){
     try {
         const decodedValue = jwt.verify(jwtToken, process.env.JWT_SECRET);
         req.userId = decodedValue.email;
+        req.userName = decodedValue.name;
     } catch (error) {
         verified = false;
     }

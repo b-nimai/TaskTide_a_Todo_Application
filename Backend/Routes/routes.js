@@ -14,7 +14,7 @@ function inputCheck(obj){
     const parsedName = nameSchema.safeParse(obj.name);
     const parsedEmail = emailSchema.safeParse(obj.email);
     const parsedPass = passwordSchema.safeParse(obj.password);
-    if(!parsedName.success || !parsedEmail.success || !parsedPass){
+    if(!parsedName.success || !parsedEmail.success || !parsedPass.success){
         return false;
     }
     return true;
@@ -24,21 +24,29 @@ function inputCheck(obj){
 router.post("/signup", async (req, res)=>{
     
     if(inputCheck(req.body)){
-        if(!inputCheck(req.body)){
+        const {name, email, password} = req.body;
+        const existingUser = await User.findOne({email})
+        if(existingUser){
             return res.status(411).json({
-                message:'Invalid inputs, try again.'
+                message: "Entered Email already registered with us"
             })
         }
-        const {name, email, password} = req.body;
-        const hashedPassword = await bcrypt.hash(password, 10);
-        await User.create({
-            name,
-            email,
-            password: hashedPassword
-        })
-        return res.status(201).json({
-            message: 'User created Successfully.'
-        })
+        try {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            await User.create({
+                name,
+                email,
+                password: hashedPassword
+            })
+            return res.status(201).json({
+                message: 'User created Successfully.'
+            })
+        } catch (error) {
+            return res.status(511).json({
+                message: "Error occur while signup",
+                error: error.message
+            })
+        }
     }
     else{
         return res.status(411).json({
@@ -55,29 +63,37 @@ router.post("/login", async (req, res)=>{
             message: 'Invalid email or password, try again'
         })
     }
-    const user = await User.findOne({email : email});
-    if(!user){
-        return res.status(411).json({
-            message: "Invalid email, try again"
-        })
-    }
-    const passwordMatched = await bcrypt.compare(password, user.password)
-    if(!passwordMatched){
-        return res.status(411).json({
-            message: 'Invalid password, try again'
-        })
-    }
+    try {
+        const user = await User.findOne({email : email});
+        if(!user){
+            return res.status(411).json({
+                message: "Invalid email, try again"
+            })
+        }
+        const passwordMatched = await bcrypt.compare(password, user.password)
+        if(!passwordMatched){
+            return res.status(411).json({
+                message: 'Invalid password, try again'
+            })
+        }
 
-    const token = jwt.sign({
-        id : user._id,
-        name: user.name,
-        email: user.email
-    },
-        process.env.JWT_SECRET
-    )
-    return res.status(201).json({
-        token
-    })
+        const token = jwt.sign({
+            id : user._id,
+            name: user.name,
+            email: user.email
+        },
+            process.env.JWT_SECRET
+        )
+        return res.status(201).json({
+            token,
+            name: user.name
+        })
+    } catch (error) {
+        return res.status(511).json({
+            message: "Error while logging in",
+            error: error.message
+        })
+    }
 })
 
 // Crete todo route handler
@@ -134,6 +150,21 @@ router.delete("/delete", userMiddleware, async (req, res)=>{
     return res.status(210).json({
         message : "To-Do deleted successfully."
     })
+})
+
+router.put("/update", userMiddleware, async(req, res) =>{
+    const id = req.headers["id"]
+    try {
+        await ToDo.findByIdAndUpdate({_id: id}, {complete: true})
+        return res.status(201).json({
+            message: "Task is updated successfully"
+        })
+    } catch (error) {
+        return res.status(501).json({
+            message: "Error Occur while updating",
+            error: error.message
+        })
+    }
 })
 
 module.exports = router;
