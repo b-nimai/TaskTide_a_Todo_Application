@@ -45,7 +45,7 @@ const Signup = () => {
                 navigate("/login")
               }}/>
             </div>
-            <ButtonWarning label={"Already have an account?"} buttonText={"Sign in"} to={"/signin"}/>
+            <ButtonWarning label={"Already have an account?"} buttonText={"Sign in"} to={"/login"}/>
             </div>
         </div>
       </div>
