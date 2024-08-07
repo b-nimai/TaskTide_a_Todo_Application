@@ -37,7 +37,7 @@ const About = () => {
                     throw new Error("User account deletion abort.");
                   }
                   await axios({
-                    url: "http://localhost:3000/user/deleteUser",
+                    url: "https://tasktide-opal.vercel.app/user/deleteUser",
                     method: "DELETE",
                     headers:{
                       Authorization: "Bearer " + localStorage.getItem('token')

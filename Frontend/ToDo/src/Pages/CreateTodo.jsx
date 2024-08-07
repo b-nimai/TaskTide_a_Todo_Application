@@ -28,7 +28,7 @@ const CreateTodo = () => {
               onClick={async()=>{
                 try {
                   await axios({
-                    url: "http://localhost:3000/user/create",
+                    url: "https://tasktide-opal.vercel.app/user/create",
                     method: "POST",
                     headers:{
                       Authorization: "Bearer " + localStorage.getItem("token")

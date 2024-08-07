@@ -16,7 +16,7 @@ const Dashboard = () => {
   }
   useEffect(() => {
     axios({
-      url: "http://localhost:3000/user/todos",
+      url: "https://tasktide-opal.vercel.app/user/todos",
       method: "GET",
       headers:{
         Authorization: "Bearer " + localStorage.getItem("token")

@@ -15,7 +15,7 @@ const Login = () => {
 
   const loginHandler = async() => {
     try {
-      const response = await axios.post("http://localhost:3000/user/login", {
+      const response = await axios.post("https://tasktide-opal.vercel.app/user/login", {
         email,
         password
       })

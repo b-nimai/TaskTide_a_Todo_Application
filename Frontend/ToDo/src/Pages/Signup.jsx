@@ -17,7 +17,7 @@ const Signup = () => {
   const otpGenerationHandler = async() => {
     try {
       const response = await axios({
-        url: "http://localhost:3000/mail/sendOtp",
+        url: "https://tasktide-opal.vercel.app/mail/sendOtp",
         method: "POST",
         data: {
           email
@@ -37,7 +37,7 @@ const Signup = () => {
     }
     try {
       const response = await axios({
-        url: "http://localhost:3000/mail/verifyOtp",
+        url: "https://tasktide-opal.vercel.app/mail/verifyOtp",
         method: "POST",
         data: {
           email,
@@ -57,7 +57,7 @@ const Signup = () => {
       return;
     }
     try {
-      const response = await axios.post("http://localhost:3000/user/signup", {
+      const response = await axios.post("https://tasktide-opal.vercel.app/user/signup", {
         name,
         email,
         password,

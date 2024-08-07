@@ -16,7 +16,7 @@ const ResetPassword = () => {
   const otpGenerationHandler = async() => {
     try {
       const response = await axios({
-        url: "http://localhost:3000/mail/sendOtp",
+        url: "https://tasktide-opal.vercel.app/mail/sendOtp",
         method: "POST",
         data: {
           email
@@ -36,7 +36,7 @@ const ResetPassword = () => {
     }
     try {
       const response = await axios({
-        url: "http://localhost:3000/mail/verifyOtp",
+        url: "https://tasktide-opal.vercel.app/mail/verifyOtp",
         method: "POST",
         data: {
           email,
@@ -57,7 +57,7 @@ const ResetPassword = () => {
     }
     try {
       await axios({
-        url: "http://localhost:3000/user/resetPassword",
+        url: "https://tasktide-opal.vercel.app/user/resetPassword",
         method: "PUT",
         data: {
             email,
