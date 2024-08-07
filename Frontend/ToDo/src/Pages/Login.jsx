@@ -45,6 +45,7 @@ const Login = () => {
                 <div className='pt-4'>
                   <Button label={"Log In"} onClick={loginHandler}/>
                 </div>
+                <ButtonWarning label={"Forgot Password?"} buttonText={"Reset"} to={"/resetPassword"}/>
                 <ButtonWarning label={"Don't have an account?"} buttonText={"Sign up"} to={"/signup"}/>
               </div>
           </div>

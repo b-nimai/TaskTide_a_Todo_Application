@@ -1,7 +1,6 @@
 const { Router } = require('express')
 const crypto = require('crypto');
 const router = Router();
-require('dotenv').config()
 const otpTemplate  = require('../Mail/MailTemplate')
 const zod = require('zod');
 const { sendMail } = require('../Mail/SendMail');

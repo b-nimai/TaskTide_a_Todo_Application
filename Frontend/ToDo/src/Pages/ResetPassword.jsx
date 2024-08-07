@@ -5,14 +5,13 @@ import SubHeading from '../Components/SubHeading'
 import InputBox from '../Components/InputBox'
 import Button from '../Components/Button'
 import Button2 from '../Components/Button2'
-import ButtonWarning from '../Components/ButtonWarning'
 import PasswordInput from '../Components/PasswordInput'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import bg from './../assets/bg.jpg'
 import {successToast, errorToast} from '../Components/Toasts'
 
-const Signup = () => {
+const ResetPassword = () => {
 
   const otpGenerationHandler = async() => {
     try {
@@ -51,27 +50,28 @@ const Signup = () => {
     }
   }
 
-  const handleSignup = async () => {
+  const resetPasswordHandler = async () => {
     if(!valid){
       errorToast("Please, validate OTP then try again");
       return;
     }
     try {
-      const response = await axios.post("http://localhost:3000/user/signup", {
-        name,
-        email,
-        password,
+      await axios({
+        url: "http://localhost:3000/user/resetPassword",
+        method: "PUT",
+        data: {
+            email,
+            newPassword: password
+        }
       });
       
-      const message = response.data.message;
-      successToast('User signed up successfully!')
+      successToast('Password reset successfull !.')
       navigate("/login");
     } catch (error) {
       errorToast(error.response?.data?.message)
     }
   };
 
-  const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [otp, setOtp] = useState("")
@@ -84,37 +84,32 @@ const Signup = () => {
       <div className="flex justify-center">
         <div className="flex flex-col justify-center">
           <div className="rounded-lg bg-white w-80 text-center p-2 h-max px-4 mt-12 mb-12 bg-opacity-60">
+                <Heading label={"Reset Password"}/>
+
+                <SubHeading  label={'"It is normal to forget your password, but it is important to remember what to do next."'}/>
+
+                <InputBox onChange={e => {
+                  setEmail(e.target.value);
+                  setValid(false);
+                }} label={"Email"} placeholder={"Like: nill123@gmail.com"} />
+
+                <div className='pt-4 px-16'>
+                  <Button2 label={"Generate OTP"} onClick={otpGenerationHandler}/>
+                </div>
+
+                <div className='flex gap-5'>
+                  <InputBox label={"Enter OTP"} placeholder={"Enter 6 digit OTP"} onChange={(e) => setOtp(e.target.value)}/>
+
+                  <div className='pt-9'>
+                    <Button2 label={"Validate"} onClick={validateOtpHandler}/>
+                  </div>
+                </div>
+
+                <PasswordInput onChange={e => setPassword(e.target.value)} label={"New Password"} placeholder={"Length shoud be greate than 7"} />
+                <div className='pt-4'>
+                  <Button label={"Reset Password"} onClick={resetPasswordHandler}/>
+                </div>
             
-            <Heading label={"Sign Up"}/>
-
-            <SubHeading  label={"Enter your information to create an account"}/>
-
-            <InputBox label={"Name"} placeholder={"Like: Nill Barman"} onChange={(e) => {
-              setName(e.target.value)
-            }}/>
-
-            <InputBox onChange={e => {
-              setEmail(e.target.value);
-              setValid(false);
-            }} label={"Email"} placeholder={"Like: nill123@gmail.com"} />
-
-            <div className='pt-4 px-16'>
-              <Button2 label={"Generate OTP"} onClick={otpGenerationHandler}/>
-            </div>
-
-            <div className='flex gap-5'>
-              <InputBox label={"Enter OTP"} placeholder={"Enter 6 digit OTP"} onChange={(e) => setOtp(e.target.value)}/>
-
-              <div className='pt-9'>
-                <Button2 label={"Validate"} onClick={validateOtpHandler}/>
-              </div>
-            </div>
-
-            <PasswordInput onChange={e => setPassword(e.target.value)} label={"Password"} placeholder={"Length shoud be greate than 7"} />
-            <div className='pt-4'>
-              <Button label={"Sign Up"} onClick={handleSignup}/>
-            </div>
-            <ButtonWarning label={"Already have an account?"} buttonText={"Sign in"} to={"/login"}/>
             </div>
         </div>
       </div>
@@ -122,4 +117,4 @@ const Signup = () => {
   )
 }
 
-export default Signup
+export default ResetPassword

@@ -1,10 +1,10 @@
-const otpTemplate = (otp) => {
+const resetPaswordConfirmation = (name) => {
 	return `<!DOCTYPE html>
 	<html>
 	
 	<head>
 		<meta charset="UTF-8">
-		<title>OTP Verification Email</title>
+		<title>Confirmation Email of Reset Password</title>
 		<style>
 			body {
 				background-color: #ffffff;
@@ -60,29 +60,42 @@ const otpTemplate = (otp) => {
 			.highlight {
 				font-weight: bold;
 			}
+            .add{
+                font-size: 18px;
+                color: green;
+            }
+            .ulli{
+                font-size: 16px;
+                font-weight:bold;
+                color: blue;
+            }
+            .point{
+                text-align: left;
+            }
 		</style>
 	
 	</head>
 	
 	<body>
 		<div class="container">
-			
-			<div class="message">Wellcome To TaskTide</div>
+			<div class="message">Welcome back to TaskTide, ${name}!</div>
 			<div class="body">
-				<p>Dear User,</p>
-				<p>Thank you for registering with TaskTide. To complete your registration or reset password, please use the following OTP
-					(One-Time Password) to verify your account:</p>
-				<h2 class="highlight">${otp}</h2>
-				<p>If you did not request this verification, please disregard this email.
-				Once your account is verified, you will have access to our platform and its features.</p>
+
+               <p> We are pleased to inform you that your password has been successfully changed. </p>
+                <p>If you did not request this change, please change your password or contact our support team immediately. </p>
+
 			</div>
-			<div class="support">If you have any questions or need assistance, please feel free to reach out to us at <a
-					href="mailto:officialnill2000@gmail.com">officialnill2000@gmail.com</a>. We are here to help!</div>
-		</div>
+            <div>
+                <p>Sincerely,</p>
+
+                <p>The TaskTide Team</p>
+            </div>
+			<div class="support">For any assistance, please feel free to reach out to us at 
+				<a href="mailto:officialnill2000@gmail.com">officialnill2000@gmail.com</a>. We are here to help!</div>
+			</div>
 	</body>
 	
 	</html>`;
+};
 
-}
-
-module.exports = otpTemplate
+module.exports = resetPaswordConfirmation

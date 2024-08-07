@@ -7,6 +7,7 @@ const router = Router();
 const jwt = require('jsonwebtoken');
 const { sendMail } = require('./../Mail/SendMail');
 const wellcomeMail  = require('../Mail/WellcomeMail');
+const resetPaswordConfirmation = require('../Mail/Confirmation');
 
 
 const nameSchema = zod.string().min(1);
@@ -102,6 +103,33 @@ router.post("/login", async (req, res)=>{
         })
     } catch (error) {
         return res.status(511).json({
+            success: false,
+            message: error.message
+        })
+    }
+})
+
+// Forgot Password
+router.put("/resetPassword", async(req, res) => {
+    const {email, newPassword} = req.body;
+    try {
+        if(!emailSchema.safeParse(email).success){
+            throw new Error("Invalid email, try again");
+        }
+        const user = await User.findOne({email})
+        if(!user) {
+            throw new Error("This is not registered email.");
+        }
+        const updatedUser = await User.findOneAndUpdate({email}, {password: newPassword})
+        const sub = "TaskTide - Ultimate Task Planner"
+        const name = updatedUser.name.split(" ")[0]
+        sendMail(email, sub, resetPaswordConfirmation(name))
+        return res.status(200).json({
+            success: true,
+            message: "Password update Success."
+        })
+    } catch (error) {
+        return res.status(411).json({
             success: false,
             message: error.message
         })
