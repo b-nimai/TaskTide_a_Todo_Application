@@ -16,7 +16,7 @@ const HeroSection = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 3000,
+    autoplaySpeed: 5000,
   };
 
   const images = [
@@ -27,18 +27,20 @@ const HeroSection = () => {
   ];
 
   return (
-    <section className="hero-section mt-20">
+    <div className='flex justify-center items-center'>
+      <div className="hero-section w-11/12 md:w-2/4 flex flex-col justify-center mt-5">
       <Slider {...settings}>
         {images.map((img, index) => (
-          <div key={index} className="relative h-96 w-1/2">
-            <img src={img} alt={`Slide ${index + 1}`} className="w-full h-96 flex justify-around items-center" />
+          <div key={index} className="relative h-full w-full">
+            <img src={img} alt={`Slide ${index + 1}`} className="w-full h-full rounded-xl opacity-80" />
             <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
               {/* <h2 className="text-white text-4xl font-bold">Slide {index + 1}</h2> */}
             </div>
-          </div>
+          </div> 
         ))}
       </Slider>
-    </section>
+    </div>
+    </div>
   );
 };
 

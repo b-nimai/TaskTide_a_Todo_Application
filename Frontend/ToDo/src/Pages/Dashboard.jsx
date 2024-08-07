@@ -4,6 +4,7 @@ import TodoCard from '../Components/TodoCard'
 import Button from '../Components/Button'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import bg from '../assets/bg.jpg'
 
 const Dashboard = () => {
   const navigate = useNavigate()
@@ -27,18 +28,24 @@ const Dashboard = () => {
     })
   },[refresh])
   return (
-    <div>
+    <div style={{backgroundImage: `url(${bg})`, backgroundSize: 'cover', backgroundPosition: 'center', minHeight: '100vh'}}>
         <Navbar />
-        <div className="bg-slate-300 min-h-screen flex justify-cente items-center flex-col ">
-          <div className='flex w-11/12 justify-around items-center p-5 m-5 bg-slate-50 rounded-md'>
+        <div className="min-h-screen flex justify-cente items-center flex-col ">
+          <div className='flex w-11/12 justify-around items-center p-5 m-5 bg-slate-50 rounded-md bg-opacity-60'>
             <div className='text-xl'>WellCome {userName}</div>
             <div>
               <Button label={"Create Task"} onClick={() => navigate("/create")}/>
             </div>
           </div>
 
-          <div className='flex w-11/12 flex-wrap items-center bg-white rounded-lg justify-around text-center p-2 py-8 h-max'>
+          <div className='flex w-11/12 flex-wrap items-center bg-white rounded-lg justify-around text-center p-2 py-8 h-max mb-5 bg-opacity-60'>
             {
+              todos.length == 0 ? <div className='text-lg font-semibold'>
+                  No Todo found ! <br /> <br />
+                  Success is a journey that begins with thoughtful planning, <br />
+                  is fueled by strategic execution, and culminates in the realization of your goals. <br /> <br />
+                  So, create a plan, set your todos, and take one step closer to success.
+                </div> :
               todos.map( todo => {
                 return(
                   <TodoCard 
@@ -48,6 +55,10 @@ const Dashboard = () => {
                     description={todo.description} 
                     complete={todo.complete}
                     onData = {getDataFromChild}
+                    createDate={todo.createdDate}
+                    createTime={todo.createdTime}
+                    updatedDate={todo.updatedDate}
+                    updatedTime={todo.updatedTime}
                   />
                 )
               })

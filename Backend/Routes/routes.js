@@ -28,7 +28,8 @@ router.post("/signup", async (req, res)=>{
         const existingUser = await User.findOne({email})
         if(existingUser){
             return res.status(411).json({
-                message: "Entered Email already registered with us"
+                success: false,
+                message: "Email already registered with us."
             })
         }
         try {
@@ -39,17 +40,19 @@ router.post("/signup", async (req, res)=>{
                 password: hashedPassword
             })
             return res.status(201).json({
+                success: true,
                 message: 'User created Successfully.'
             })
         } catch (error) {
             return res.status(511).json({
-                message: "Error occur while signup",
-                error: error.message
+                success: false,
+                message: error.message
             })
         }
     }
     else{
         return res.status(411).json({
+            success: false,
             message: 'Invalid Inputs, try again.'
         })
     }
@@ -60,6 +63,7 @@ router.post("/login", async (req, res)=>{
     const { email, password } = req.body;
     if(!emailSchema.safeParse(email).success || !passwordSchema.safeParse(password).success){
         return res.status(411).json({
+            success: false,
             message: 'Invalid email or password, try again'
         })
     }
@@ -67,12 +71,14 @@ router.post("/login", async (req, res)=>{
         const user = await User.findOne({email : email});
         if(!user){
             return res.status(411).json({
+                success: false,
                 message: "Invalid email, try again"
             })
         }
         const passwordMatched = await bcrypt.compare(password, user.password)
         if(!passwordMatched){
             return res.status(411).json({
+                success: false,
                 message: 'Invalid password, try again'
             })
         }
@@ -86,12 +92,13 @@ router.post("/login", async (req, res)=>{
         )
         return res.status(201).json({
             token,
-            name: user.name
+            name: user.name,
+            email: user.email
         })
     } catch (error) {
         return res.status(511).json({
-            message: "Error while logging in",
-            error: error.message
+            success: false,
+            message: error.message
         })
     }
 })
@@ -102,19 +109,28 @@ router.post("/create", userMiddleware, async (req, res)=>{
     const {title, description} = req.body;
     if(!check.safeParse(title).success || !check.safeParse(description).success){
         return res.status(411).json({
+            success: false,
             message: 'Invalid input, try again.'
         })
     }
     const identity = req.userId;
 
-    const todo = await ToDo.create({
-        identity,
-        title,
-        description
-    })
-    return res.json({
-        message: 'To-Do created Successfully'
-    })
+    try {
+        const todo = await ToDo.create({
+            identity,
+            title,
+            description
+        })
+        return res.json({
+            success: true,
+            message: 'To-Do created Successfully'
+        })
+    } catch (error) {
+        return res.json({
+            success: false,
+            message: error.message
+        })
+    }
 })
 
 // Find all the todos route handler
@@ -122,11 +138,6 @@ router.get("/todos", userMiddleware, async (req, res)=>{
     const identity = req.userId;
     try {
         const todos = await ToDo.find({identity: identity})
-        if(!todos){
-            return res.status(511).json({
-                message: "To-Do list is empty."
-            })
-        }
         return res.status(201).json({
             todos
         })
@@ -144,25 +155,52 @@ router.delete("/delete", userMiddleware, async (req, res)=>{
         await ToDo.findOneAndDelete({_id: id});
     } catch (error) {
         return res.status(511).json({
+            success: false,
             message: error.message
         })
     }
     return res.status(210).json({
+        success: true,
         message : "To-Do deleted successfully."
     })
 })
 
+// Update todo handler
 router.put("/update", userMiddleware, async(req, res) =>{
     const id = req.headers["id"]
+    const now = new Date()
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const date = `${year}:${month}:${day}`;
+    const time = now.toTimeString().split(' ')[0];
     try {
-        await ToDo.findByIdAndUpdate({_id: id}, {complete: true})
+        await ToDo.findByIdAndUpdate({_id: id}, {complete: true, updatedDate: date, updatedTime: time})
         return res.status(201).json({
-            message: "Task is updated successfully"
+            success: true,
+            message: "Task Done"
         })
     } catch (error) {
         return res.status(501).json({
-            message: "Error Occur while updating",
-            error: error.message
+            success: false,
+            message: error.message
+        })
+    }
+})
+
+// Delete User Profile 
+router.delete("/deleteUser", userMiddleware, async(req, res) => {
+    const email = req.body.email;
+    try {
+        await User.findOneAndDelete({email})
+        return res.status(201).json({
+            success: true,
+            message: "User account Delete Successfully."
+        })
+    } catch (error) {
+        return res.status(511).json({
+            success: false,
+            message: error.message
         })
     }
 })

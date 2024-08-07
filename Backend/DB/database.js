@@ -36,6 +36,32 @@ const toDoSchema = new mongoose.Schema({
     complete:{
         type: Boolean,
         default: false
+    },
+    createdDate: {
+        type: String,
+        default: function (){
+            const now = new Date()
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const date = `${year}:${month}:${day}`;
+            return date;
+        }
+    },
+    createdTime: {
+        type: String,
+        default: function () {
+            const now = new Date();
+            return now.toTimeString().split(' ')[0];
+        }
+    },
+    updatedDate: {
+        type: String,
+        default: "----:--:--"
+    },
+    updatedTime: {
+        type: String,
+        default: "--:--:--"
     }
 })
 

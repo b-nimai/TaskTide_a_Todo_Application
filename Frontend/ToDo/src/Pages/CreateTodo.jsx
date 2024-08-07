@@ -6,17 +6,19 @@ import Heading from '../Components/Heading'
 import SubHeading from '../Components/SubHeading'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import bg from '../assets/bg.jpg'
+import { errorToast, successToast } from '../Components/Toasts'
 
 const CreateTodo = () => {
   const navigate = useNavigate()
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   return (
-    <div>
+    <div style={{backgroundImage: `url(${bg})`, backgroundSize: 'cover', backgroundPosition: 'center', height: '100vh'}}>
       <Navbar />
-      <div className="bg-slate-300 h-screen flex justify-center">
+      <div className="flex justify-center">
         <div className="flex flex-col justify-center">
-          <div className="rounded-lg bg-white w-80 text-center p-2 h-max px-4">
+          <div className="rounded-lg bg-white w-80 text-center p-2 h-max px-4 mt-20 bg-opacity-60">
             <Heading label={"Create Task"} />
             <SubHeading label={"Plan early, execute daily, success will follow you naturally."} />
             <TextareaBox onChange={(e) => setTitle(e.target.value)} label={"Title"} row={2} placeholder={"Title goes Here"} />
@@ -24,18 +26,23 @@ const CreateTodo = () => {
             <Button 
               label={"Create Task"}
               onClick={async()=>{
-                await axios({
-                  url: "http://localhost:3000/user/create",
-                  method: "POST",
-                  headers:{
-                    Authorization: "Bearer " + localStorage.getItem("token")
-                  },
-                  data:{
-                    title,
-                    description
-                  }
-                })
-                navigate("/dashboard")
+                try {
+                  await axios({
+                    url: "http://localhost:3000/user/create",
+                    method: "POST",
+                    headers:{
+                      Authorization: "Bearer " + localStorage.getItem("token")
+                    },
+                    data:{
+                      title,
+                      description
+                    }
+                  })
+                  successToast("Task created successfully.")
+                  navigate("/dashboard")
+                } catch (error) {
+                  errorToast("Task creation failed.")
+                }
               }}
             />
           </div>

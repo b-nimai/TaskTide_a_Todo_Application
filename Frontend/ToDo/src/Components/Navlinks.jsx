@@ -17,12 +17,12 @@ function Navlinks() {
         </div>
 
         {isOpen && (
-            <div className='md:hidden z-30 text-2xl bg-white flex flex-col flex-wrap items-center basis-full w-full'>
+            <div className='md:hidden z-30 text-2xl bg-white bg-opacity-70 rounded-xl flex flex-col flex-wrap items-center basis-full w-full'>
                 <Links />
             </div>
         )}
 
-        <div className='md:hidden mt-1 mx-12 text-3xl font-bold '>
+        <div className='md:hidden mt-3.5 mx-12 text-3xl font-bold '>
             <button onClick={toggleMenuBar} className='transition-all duration-500'>{isOpen ? <RxCross2 />: <FiAlignJustify />}</button>
         </div>
 

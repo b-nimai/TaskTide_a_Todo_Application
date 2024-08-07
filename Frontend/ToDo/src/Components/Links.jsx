@@ -1,9 +1,11 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import { successToast } from './Toasts'
 
 function Links() {
     const navigate = useNavigate()
     const nameExists = !!localStorage.getItem('name')
+    const name = localStorage.getItem('name')
   return (
     <>
         <div className='p-1 flex flex-col gap-3 hover:text-slate-500 transition-all duration-200 relative group'>
@@ -11,15 +13,16 @@ function Links() {
                 nameExists ? <button onClick={()=> {
                         localStorage.removeItem("name");
                         localStorage.removeItem("token");
+                        successToast("Logout success.")
                         navigate("/login")
                     }}>
-                        Log Out
+                        Log out
                     </button>
                      : 
                      <button onClick={()=>{
                         navigate("/login")
                      }}>
-                        Sign in
+                        Log in
                     </button>
             }
             <div className='h-px w-16 mx-auto bg-slate-500 hidden md:group-hover:block transition-all duration-200'></div>
@@ -31,8 +34,18 @@ function Links() {
             <div className='h-px w-24 mx-auto bg-slate-500 hidden md:group-hover:block transition-all duration-200'></div>
         </div>
         <div className='p-1 flex flex-col gap-3 hover:text-slate-500 transition-all duration-200 relative group'>
-            <button onClick={() => navigate("/about")}>About</button>
-            <div className='h-px w-14 mx-auto bg-slate-500 hidden md:group-hover:block transition-all duration-200'></div>
+            {
+                nameExists ? <div className='text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-4 
+                focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 flex justify-center'>
+                    <button 
+                        onClick={() => navigate("/about")}
+                        className='text-base'
+                    >{name[0]}</button>
+                </div> : <button onClick={() => navigate("/signup")}>Sign up</button>
+            }
+            {
+                nameExists ? <div></div> : <div className='h-px w-14 mx-auto bg-slate-500 hidden md:group-hover:block transition-all duration-200'></div>
+            }
         </div>
     </>
   )
