@@ -17,4 +17,9 @@ app.get("/", (req, res) =>{
     res.send("Hello, Alright..")
 })
 
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
 module.exports = app;
