@@ -17,6 +17,4 @@ app.get("/", (req, res) =>{
     res.send("Hello, Alright..")
 })
 
-app.listen(port, ()=>{
-    console.log(`App is starting at port: ${port}`)
-})
+module.exports = app;
