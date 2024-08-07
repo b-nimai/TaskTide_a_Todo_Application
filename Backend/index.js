@@ -13,6 +13,10 @@ const mailRoute = require('./Routes/mailRoute')
 app.use("/user", userRoute)
 app.use("/mail", mailRoute)
 
+app.get("/", (req, res) =>{
+    res.send("Hello, Alright..")
+})
+
 app.listen(port, ()=>{
     console.log(`App is starting at port: ${port}`)
 })
