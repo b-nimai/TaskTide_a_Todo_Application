@@ -1,22 +1,13 @@
 const { Router } = require('express')
-const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const router = Router();
 require('dotenv').config()
-const otpTemplate  = require('./MailTemplate')
-const zod = require('zod')
+const otpTemplate  = require('../Mail/MailTemplate')
+const zod = require('zod');
+const { sendMail } = require('../Mail/SendMail');
 
+// Email Sending part
 let userOtpMap = {};
-
-const transporter = nodemailer.createTransport({
-    host: process.env.MAIL_HOST,
-    port: 587,
-    secure: false,
-    auth: {
-      user: process.env.MAIL_USER,
-      pass: process.env.MAIL_PASS
-    }
-});
 
 const emailSchema = zod.string().email();
 // Send Otp
@@ -29,30 +20,23 @@ router.post('/sendOtp', (req, res) => {
       })
     }
     const otp = crypto.randomInt(100000, 999999).toString();
-  
     userOtpMap[email] = otp;
+
+    // Send otp using mail
+    try {
+      sendMail(email, "OTP Verification Email", otpTemplate(otp));
+      return res.status(201).json({
+        success: true,
+        message: "OTP Send successfull."
+      })
+    } catch (error) {
+      console.log(error.message)
+      return res.status(511).json({
+        success: false,
+        message: "Error while sending Otp"
+      })
+    }
   
-    const mailOptions = {
-      from: 'officialnill2000@gmail.com',
-      to: email,
-      subject: 'OTP Verification Email',
-      html: otpTemplate(otp)
-    };
-  
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.log(error)
-        return res.status(500).json({
-          success: false, 
-          message: error.message
-        });
-      } else {
-        return res.status(200).json({
-          success: true,
-          message: 'OTP sent'
-        })
-      }
-    });
 });
 
 // verify otp

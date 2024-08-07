@@ -107,7 +107,7 @@ const Signup = () => {
               </div>
             </div>
 
-            <PasswordInput onChange={e => setPassword(e.target.value)} label={"Password"} placeholder={"Like: Nill@123"} />
+            <PasswordInput onChange={e => setPassword(e.target.value)} label={"Password"} placeholder={"Length shoud be greate than 7"} />
             <div className='pt-4'>
               <Button label={"Sign Up"} onClick={handleSignup}/>
             </div>

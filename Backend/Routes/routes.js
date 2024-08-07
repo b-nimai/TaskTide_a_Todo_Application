@@ -3,8 +3,10 @@ const zod = require('zod');
 const { User, ToDo } = require('../DB/database');
 const bcrypt = require('bcrypt');
 const { userMiddleware } = require('../Middlewares/Middleware');
-const router = Router()
-const jwt = require('jsonwebtoken')
+const router = Router();
+const jwt = require('jsonwebtoken');
+const { sendMail } = require('./../Mail/SendMail');
+const wellcomeMail  = require('../Mail/WellcomeMail');
 
 
 const nameSchema = zod.string().min(1);
@@ -39,6 +41,9 @@ router.post("/signup", async (req, res)=>{
                 email,
                 password: hashedPassword
             })
+            const firstName = name.split(" ")[0];
+            const sub = "TaskTide - Ultimate Task Planner";
+            sendMail(email, sub, wellcomeMail(firstName))
             return res.status(201).json({
                 success: true,
                 message: 'User created Successfully.'
@@ -88,7 +93,7 @@ router.post("/login", async (req, res)=>{
             name: user.name,
             email: user.email
         },
-            process.env.JWT_SECRET
+            process.env.TODO_JWT_SECRET
         )
         return res.status(201).json({
             token,

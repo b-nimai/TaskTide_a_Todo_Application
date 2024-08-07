@@ -9,7 +9,7 @@ async function userMiddleware(req, res, next){
     const jwtToken = words[1];
     let verified = true;
     try {
-        const decodedValue = jwt.verify(jwtToken, process.env.JWT_SECRET);
+        const decodedValue = jwt.verify(jwtToken, process.env.TODO_JWT_SECRET);
         req.userId = decodedValue.email;
         req.userName = decodedValue.name;
     } catch (error) {
