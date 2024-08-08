@@ -61,7 +61,7 @@ const ResetPassword = () => {
         method: "PUT",
         data: {
             email,
-            newPassword: password
+            newPassword
         }
       });
       
@@ -73,7 +73,7 @@ const ResetPassword = () => {
   };
 
   const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [newPassword, setPassword] = useState("")
   const [otp, setOtp] = useState("")
   const [generated, setGenerated] = useState(false)
   const [valid, setValid] = useState(false)

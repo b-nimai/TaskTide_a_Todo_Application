@@ -35,7 +35,7 @@ const TodoCard = ({title, description, complete, id, onData, createTime, createD
                 onClick={async() => {
                   try {
                     await axios({
-                      url: "http://localhost:3000/user/update",
+                      url: "https://tasktide-opal.vercel.app/user/update",
                       method: "PUT",
                       headers: {
                         Authorization: "Bearer " + localStorage.getItem("token"),
@@ -56,7 +56,7 @@ const TodoCard = ({title, description, complete, id, onData, createTime, createD
                 onClick={async() => {
                   try {
                     await axios({
-                      url: "http://localhost:3000/user/delete",
+                      url: "https://tasktide-opal.vercel.app/user/delete",
                       method: "DELETE",
                       headers: {
                         Authorization: "Bearer " + localStorage.getItem("token")

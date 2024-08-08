@@ -44,7 +44,7 @@ router.post("/signup", async (req, res)=>{
             })
             const firstName = name.split(" ")[0];
             const sub = "TaskTide - Ultimate Task Planner";
-            sendMail(email, sub, wellcomeMail(firstName))
+            await sendMail(email, sub, wellcomeMail(firstName))
             return res.status(201).json({
                 success: true,
                 message: 'User created Successfully.'
@@ -78,14 +78,14 @@ router.post("/login", async (req, res)=>{
         if(!user){
             return res.status(411).json({
                 success: false,
-                message: "Invalid email, try again"
+                message: "Wrong email, try again"
             })
         }
         const passwordMatched = await bcrypt.compare(password, user.password)
         if(!passwordMatched){
             return res.status(411).json({
                 success: false,
-                message: 'Invalid password, try again'
+                message: 'Wrong password, try again'
             })
         }
 
@@ -120,10 +120,14 @@ router.put("/resetPassword", async(req, res) => {
         if(!user) {
             throw new Error("This is not registered email.");
         }
-        const updatedUser = await User.findOneAndUpdate({email}, {password: newPassword})
+        if(!passwordSchema.safeParse(newPassword).success){
+            throw new Error("Password length should be 8 or more.");
+        }
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        const updatedUser = await User.findOneAndUpdate({email}, {password: hashedPassword})
         const sub = "TaskTide - Ultimate Task Planner"
         const name = updatedUser.name.split(" ")[0]
-        sendMail(email, sub, resetPaswordConfirmation(name))
+        await sendMail(email, sub, resetPaswordConfirmation(name))
         return res.status(200).json({
             success: true,
             message: "Password update Success."
@@ -140,16 +144,14 @@ router.put("/resetPassword", async(req, res) => {
 const check = zod.string().min(1);
 router.post("/create", userMiddleware, async (req, res)=>{
     const {title, description} = req.body;
-    if(!check.safeParse(title).success || !check.safeParse(description).success){
-        return res.status(411).json({
-            success: false,
-            message: 'Invalid input, try again.'
-        })
-    }
+    
     const identity = req.userId;
 
     try {
-        const todo = await ToDo.create({
+        if(!check.safeParse(title).success || !check.safeParse(description).success){
+            throw new Error("Write something in title and description.");
+        }
+        await ToDo.create({
             identity,
             title,
             description
@@ -176,7 +178,7 @@ router.get("/todos", userMiddleware, async (req, res)=>{
         })
     } catch (error) {
         return res.status(510).json({
-            error: error.message
+            message: error.message
         })
     }
 })
@@ -186,16 +188,16 @@ router.delete("/delete", userMiddleware, async (req, res)=>{
     const {id} = req.body;
     try {
         await ToDo.findOneAndDelete({_id: id});
+        return res.status(210).json({
+            success: true,
+            message : "To-Do deleted successfully."
+        })
     } catch (error) {
         return res.status(511).json({
             success: false,
             message: error.message
         })
     }
-    return res.status(210).json({
-        success: true,
-        message : "To-Do deleted successfully."
-    })
 })
 
 // Update todo handler

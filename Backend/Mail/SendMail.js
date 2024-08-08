@@ -1,6 +1,8 @@
 const nodemailer = require('nodemailer');
 
-const transporter = nodemailer.createTransport({
+const sendMail = async (email, sub, body)=> {
+  
+  const transporter = nodemailer.createTransport({
     host: process.env.MAIL_HOST,
     port: 587,
     secure: false,
@@ -8,22 +10,20 @@ const transporter = nodemailer.createTransport({
       user: process.env.MAIL_USER,
       pass: process.env.MAIL_PASS
     }
-});
+    })
 
-const sendMail = (email, sub, body)=> {
     const mailOptions = {
       from: 'officialnill2000@gmail.com',
       to: `${email}`,
-      subject: sub,
+      subject: `${sub}`,
       html: `${body}`,
     };
-  
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        return error.message
-      } else {
-        return "OTP send."
-      }
-    });
+    
+    try {
+      await transporter.sendMail(mailOptions) 
+      return "OTP Send."
+    } catch (error) {
+      return error.message
+    }
 }
 module.exports = { sendMail }

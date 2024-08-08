@@ -10,7 +10,7 @@ let userOtpMap = {};
 
 const emailSchema = zod.string().email();
 // Send Otp
-router.post('/sendOtp', (req, res) => {
+router.post('/sendOtp', async(req, res) => {
     const { email } = req.body;
     if(!emailSchema.safeParse(email).success) {
       return res.status(411).json({
@@ -23,16 +23,15 @@ router.post('/sendOtp', (req, res) => {
 
     // Send otp using mail
     try {
-      sendMail(email, "OTP Verification Email", otpTemplate(otp));
+      await sendMail(email, "OTP Verification Email", otpTemplate(otp));
       return res.status(201).json({
         success: true,
         message: "OTP Send successfull."
       })
     } catch (error) {
-      console.log(error.message)
       return res.status(511).json({
         success: false,
-        message: "Error while sending Otp"
+        message: error.message
       })
     }
   
