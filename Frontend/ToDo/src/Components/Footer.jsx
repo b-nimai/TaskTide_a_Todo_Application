@@ -9,7 +9,6 @@ const Footer = () => {
         <div className='w-10/12 md:w-1/2 h-0 mt-8 flex justify-around items-center text-lg font-bold gap-2'>
             <div className='p-1 flex flex-col gap-3 hover:text-slate-500 transition-all duration-200 relative group'>
                 <button onClick={()=> navigate("/")}>Home</button>
-                <div className='h-px w-12 mx-auto bg-slate-500 hidden md:group-hover:block transition-all duration-200'></div>
             </div>
             <Links />
         </div>

@@ -26,7 +26,6 @@ function Links() {
                         Log in
                     </button>
             }
-            <div className='h-px w-12 mx-auto bg-slate-500 hidden md:group-hover:block transition-all duration-200'></div>
         </div>
         <div className='p-1 flex flex-col gap-3 hover:text-slate-500 transition-all duration-200 relative group'>
             {
@@ -35,21 +34,16 @@ function Links() {
                     toast.error("Please log in to access the dashboard.")
                 }}>Dashboard</button>
             }
-            <div className='h-px w-24 mx-auto bg-slate-500 hidden md:group-hover:block transition-all duration-200'></div>
         </div>
         <div className='p-1 flex flex-col gap-3 hover:text-slate-500 transition-all duration-200 relative group'>
             {
-                nameExists ? <div className='text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-4 
-                focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 flex justify-center'>
+                nameExists ? <div>
                     <button 
                         onClick={() => navigate("/about")}
-                        className='text-base'
-                    >{name[0]}</button>
+                    >Profile</button>
                 </div> : <button onClick={() => navigate("/signup")}>Sign up</button>
             }
-            {
-                nameExists ? <div></div> : <div className='h-px w-14 mx-auto bg-slate-500 hidden md:group-hover:block transition-all duration-200'></div>
-            }
+            
         </div>
     </>
   )
