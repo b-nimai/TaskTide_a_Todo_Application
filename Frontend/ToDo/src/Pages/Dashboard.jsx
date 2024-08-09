@@ -5,6 +5,7 @@ import Button from '../Components/Button'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import bg from '../assets/bg.jpg'
+import Footer from '../Components/Footer'
 
 const Dashboard = () => {
   const navigate = useNavigate()
@@ -65,6 +66,9 @@ const Dashboard = () => {
             }
           </div>
           
+        </div>
+        <div>
+          <Footer />
         </div>
     </div>
   )

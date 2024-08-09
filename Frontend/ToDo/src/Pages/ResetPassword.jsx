@@ -10,6 +10,7 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import bg from './../assets/bg.jpg'
 import {successToast, errorToast} from '../Components/Toasts'
+import Footer from '../Components/Footer'
 
 const ResetPassword = () => {
 
@@ -112,6 +113,9 @@ const ResetPassword = () => {
             
             </div>
         </div>
+      </div>
+      <div className='md:mt-0 mt-24'>
+        <Footer />
       </div>
     </div>
   )

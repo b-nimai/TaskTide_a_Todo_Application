@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import bg from '../assets/bg.jpg'
 import { errorToast, successToast } from '../Components/Toasts'
+import Footer from '../Components/Footer'
 
 const CreateTodo = () => {
   const navigate = useNavigate()
@@ -47,6 +48,9 @@ const CreateTodo = () => {
             />
           </div>
         </div>
+      </div>
+      <div className='md:mt-24 mt-40'>
+        <Footer/>
       </div>
     </div>
   )

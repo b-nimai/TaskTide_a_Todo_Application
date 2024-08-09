@@ -1,6 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { successToast } from './Toasts'
+import toast from 'react-hot-toast'
 
 function Links() {
     const navigate = useNavigate()
@@ -25,11 +26,14 @@ function Links() {
                         Log in
                     </button>
             }
-            <div className='h-px w-16 mx-auto bg-slate-500 hidden md:group-hover:block transition-all duration-200'></div>
+            <div className='h-px w-12 mx-auto bg-slate-500 hidden md:group-hover:block transition-all duration-200'></div>
         </div>
         <div className='p-1 flex flex-col gap-3 hover:text-slate-500 transition-all duration-200 relative group'>
             {
-                nameExists ? <button onClick={() => navigate("/dashboard")}>Dashboard</button> : <button onClick={() => navigate("/login")}>Dashboard</button>
+                nameExists ? <button onClick={() => navigate("/dashboard")}>Dashboard</button> : <button onClick={() => {
+                    navigate("/login");
+                    toast.error("Please log in to access the dashboard.")
+                }}>Dashboard</button>
             }
             <div className='h-px w-24 mx-auto bg-slate-500 hidden md:group-hover:block transition-all duration-200'></div>
         </div>

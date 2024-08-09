@@ -11,6 +11,7 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import bg from './../assets/bg.jpg'
 import {successToast, errorToast} from '../Components/Toasts'
+import Footer from '../Components/Footer'
 
 const Signup = () => {
 
@@ -89,14 +90,14 @@ const Signup = () => {
 
             <SubHeading  label={"Enter your information to create an account"}/>
 
-            <InputBox label={"Name"} placeholder={"Like: Nill Barman"} onChange={(e) => {
+            <InputBox label={"Name"} placeholder={"Example: Nill Barman"} onChange={(e) => {
               setName(e.target.value)
             }}/>
 
             <InputBox onChange={e => {
               setEmail(e.target.value);
               setValid(false);
-            }} label={"Email"} placeholder={"Like: nill123@gmail.com"} />
+            }} label={"Email"} placeholder={"Exmaple: nill123@gmail.com"} />
 
             <div className='pt-4 px-16'>
               <Button2 label={"Generate OTP"} onClick={otpGenerationHandler}/>
@@ -118,6 +119,7 @@ const Signup = () => {
             </div>
         </div>
       </div>
+      <Footer />
     </div>
   )
 }

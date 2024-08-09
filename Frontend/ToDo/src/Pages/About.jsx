@@ -6,6 +6,7 @@ import Button from '../Components/Button';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { errorToast, successToast } from '../Components/Toasts';
+import Footer from '../Components/Footer';
 
 
 const clearLocalStorage = () => {
@@ -19,7 +20,7 @@ const About = () => {
   return (
     <div style={{backgroundImage: `url(${bg})`, backgroundSize: 'cover', backgroundPosition: 'center', minHeight: "100vh"}}>
       <Navbar />
-      <div className=' flex justify-center'>
+      <div className=' flex justify-center items-center'>
         <div className='bg-white md:w-2/6 mt-20 pb-4 px-10 flex flex-col gap-3 justify-center items-center rounded-3xl bg-opacity-60'>
           <Heading label={"User Profile"}/>
           <div className='text-slate-500 text-base pt-1 px-4'>
@@ -57,6 +58,9 @@ const About = () => {
             />
           </div>
         </div>
+      </div>
+      <div className='md:mt-56 mt-80'>
+        <Footer />
       </div>
     </div>
   );
