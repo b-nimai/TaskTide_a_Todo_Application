@@ -203,12 +203,11 @@ router.delete("/delete", userMiddleware, async (req, res)=>{
 // Update todo handler
 router.put("/update", userMiddleware, async(req, res) =>{
     const id = req.headers["id"]
-    const now = new Date()
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const date = `${year}:${month}:${day}`;
-    const time = now.toTimeString().split(' ')[0];
+    const now = new Date();
+    const options = { timeZone: 'Asia/Kolkata', hour12: true };
+    let local = now.toLocaleString('en-IN', options)
+    let time = local.split(",")[1];
+    let date = local.split(",")[0];
     try {
         await ToDo.findByIdAndUpdate({_id: id}, {complete: true, updatedDate: date, updatedTime: time})
         return res.status(201).json({

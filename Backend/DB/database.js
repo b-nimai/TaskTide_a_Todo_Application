@@ -43,11 +43,10 @@ const toDoSchema = new mongoose.Schema({
     createdDate: {
         type: String,
         default: function (){
-            const now = new Date()
-            const year = now.getFullYear();
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            const day = String(now.getDate()).padStart(2, '0');
-            const date = `${year}:${month}:${day}`;
+            const now = new Date();
+            const options = { timeZone: 'Asia/Kolkata', hour12: true };
+            let local = now.toLocaleString('en-IN', options)
+            let date = local.split(",")[0];
             return date;
         }
     },
@@ -55,12 +54,15 @@ const toDoSchema = new mongoose.Schema({
         type: String,
         default: function () {
             const now = new Date();
-            return now.toTimeString().split(' ')[0];
+            const options = { timeZone: 'Asia/Kolkata', hour12: true };
+            let local = now.toLocaleString('en-IN', options)
+            let time = local.split(",")[1];
+            return time;
         }
     },
     updatedDate: {
         type: String,
-        default: "----:--:--"
+        default: "--:--:----"
     },
     updatedTime: {
         type: String,
