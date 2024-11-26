@@ -10,13 +10,12 @@
       {
         "src": "/(.*)",
         "dest": "/index.js"
-      }
-    ],
-    "rewrite": [
+      },
       {
         "source": "/(.*)",
-        "destination": "/"
+        "dest": "/"
       }
     ]
+    
 }
   
